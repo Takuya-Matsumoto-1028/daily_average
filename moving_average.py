@@ -1,8 +1,6 @@
 import streamlit as st
-import numpy as np
 import datetime
 import pandas as pd
-import matplotlib.pyplot as plt
 
 st.title('移動平均算出ツール')
 
