@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 import datetime
 import pandas as pd
 
@@ -23,10 +24,10 @@ if uploaded_file1 is not None:
     # 移動平均計算（売上）
     df_sum = df.pivot_table(index='売上日付', columns='受注方法コード', values='税抜売上金額', aggfunc='sum', margins=True)
     df_sum = df_sum[:-1]
-    df_sum_ = df_sum.rename(columns={'All': '売上金額（千円）'})
-    df_sum_ = df_sum_.reset_index()
-    df_sum_ = df_sum_.set_index('売上日付')
-    df_sum_ = df_sum_['売上金額（千円）']
+    df_sum = df_sum.rename(columns={'All': 'All_sum'})
+    df_sum = df_sum.reset_index()
+    df_sum_ = df_sum.set_index('売上日付')
+    df_sum_ = df_sum_['All_sum']
     df_sum_ = ((df_sum_.rolling(days).mean()).round(2)) / 1000
     df_sum_ = df_sum_[(days-1):]
 
@@ -35,10 +36,10 @@ if uploaded_file1 is not None:
     # 移動平均計算（客数）
     df_count = df.pivot_table(index='売上日付', columns='受注方法コード', values='税抜売上金額', aggfunc='count', margins=True)
     df_count = df_count[:-1]
-    df_count_ = df_count.rename(columns={'All': '売上件数（件）'})
-    df_count_ = df_count_.reset_index()
-    df_count_ = df_count_.set_index('売上日付')
-    df_count_ = df_count_['売上件数（件）']
+    df_count = df_count.rename(columns={'All': 'All_count'})
+    df_count = df_count.reset_index()
+    df_count_ = df_count.set_index('売上日付')
+    df_count_ = df_count_['All_count']
     df_count_ = (df_count_.rolling(days).mean()).round(2)
     df_count_ = df_count_[(days-1):]
 
@@ -47,10 +48,10 @@ if uploaded_file1 is not None:
     # 移動平均計算（客単価）
     df_average = df.pivot_table(index='売上日付', columns='受注方法コード', values='税抜売上金額', aggfunc='mean', margins=True)
     df_average = df_average[:-1]
-    df_average_ = df_average.rename(columns={'All': '平均単価（円）'})
-    df_average = df_average_.reset_index()
+    df_average = df_average.rename(columns={'All': 'All_mean'})
+    df_average = df_average.reset_index()
     df_average_ = df_average.set_index('売上日付')
-    df_average_ = df_average_['平均単価（円）']
+    df_average_ = df_average_['All_mean']
     df_average_ = (df_average_.rolling(days).mean()).round(2)
     df_average_ = df_average_[(days-1):]
 
@@ -59,3 +60,14 @@ if uploaded_file1 is not None:
     st.write(days, '日移動平均グラフ')
     df_concat = pd.concat([df_sum_, df_count_, df_average_], axis=1)
     st.line_chart(df_concat)
+
+    df1 = df_sum[df_sum['売上日付'] == datetime.datetime((datetime.date.today().year - 1), datetime.date.today().month, datetime.date.today().day)]
+    df1 = df1[['All_sum']]
+    df2 = df_count[df_count['売上日付'] == datetime.datetime((datetime.date.today().year - 1), datetime.date.today().month, datetime.date.today().day)]
+    df2 = df2[['All_count']]
+    df3 = df_average[df_average['売上日付'] == datetime.datetime((datetime.date.today().year - 1), datetime.date.today().month, datetime.date.today().day)]
+    df3 = df3[['All_mean']]
+
+    st.write('去年同日の売上金額は', df1.iloc[0,0], '円です。')
+    st.write('去年同日の売上件数は', df2.iloc[0,0], '円です。')
+    st.write('去年同日の平均客単価は', df3.iloc[0,0], '円です。')
