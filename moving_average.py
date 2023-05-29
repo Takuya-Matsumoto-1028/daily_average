@@ -58,7 +58,7 @@ if uploaded_file1 is not None:
     # st.line_chart(df_average_)
 
     st.write(days, '日移動平均グラフ')
-    df_concat = pd.concat([df_sum_, df_count_, df_average_], axis=1)
+    df_concat = pd.concat([df_sum_, df_count_], axis=1)
     st.line_chart(df_concat)
 
     df1 = df_sum[df_sum['売上日付'] == datetime.datetime((datetime.date.today().year - 1), datetime.date.today().month, datetime.date.today().day)]
@@ -69,5 +69,5 @@ if uploaded_file1 is not None:
     df3 = df3[['客単価(円)']]
 
     st.write('去年同日の売上金額は', df1.iloc[0,0], '円です。')
-    st.write('去年同日の売上件数は', df2.iloc[0,0], '件です。')
+    st.write('去年同日の売上件数は', df2.iloc[0,0], '円です。')
     st.write('去年同日の平均客単価は', df3.iloc[0,0], '円です。')
