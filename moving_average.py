@@ -3,7 +3,7 @@ import numpy as np
 import datetime
 import pandas as pd
 
-st.title('移動平均算出ツール')
+st.title('移動平均算出')
 
 days = st.slider('何日平均を表示しますか',  min_value=0, max_value=365, step=1, value=365)
 
